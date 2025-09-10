@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.epam.gym.trainer_hours_service.api.controller.TrainerWorkloadControllerTest
+-------------------------------------------------------------------------------
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.179 s -- in com.epam.gym.trainer_hours_service.api.controller.TrainerWorkloadControllerTest

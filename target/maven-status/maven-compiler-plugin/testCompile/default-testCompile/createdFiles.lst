@@ -1,0 +1,7 @@
+com\epam\gym\trainer_hours_service\api\controller\TrainerWorkloadControllerTest.class
+com\epam\gym\trainer_hours_service\domain\service\impl\TrainerWorkloadServiceImplTest.class
+com\epam\gym\trainer_hours_service\security\JwtAuthenticationEntryPointTest.class
+com\epam\gym\trainer_hours_service\security\JwtTokenExtractorTest.class
+com\epam\gym\trainer_hours_service\integration\TrainerWorkloadIntegrationTest.class
+com\epam\gym\trainer_hours_service\security\JwtAuthenticationFilterTest.class
+com\epam\gym\trainer_hours_service\security\JwtTokenProviderTest.class

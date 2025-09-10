@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.epam.gym.trainer_hours_service.domain.service.impl.TrainerWorkloadServiceImplTest
+-------------------------------------------------------------------------------
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.213 s -- in com.epam.gym.trainer_hours_service.domain.service.impl.TrainerWorkloadServiceImplTest
