@@ -42,7 +42,7 @@ public class TrainerWorkloadServiceImpl  implements ITrainerWorkloadService {
 		trainerWorkload.setTrainerUsername(request.trainerUsername());
 		trainerWorkload.setTrainerFirstName(request.trainerFirstName());
 		trainerWorkload.setTrainerLastName(request.trainerLastName());
-		trainerWorkload.setIsActive(request.isActive());
+		trainerWorkload.setActive(request.isActive());
 		
 		
 		Map<Integer, Map<Integer, Integer>> yearlySummary = trainerWorkload.getYearlySummary();

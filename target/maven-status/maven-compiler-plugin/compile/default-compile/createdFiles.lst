@@ -6,6 +6,7 @@ com\epam\gym\trainer_hours_service\api\dto\request\TrainerWorkloadRequest.class
 com\epam\gym\trainer_hours_service\api\filter\RequestLoggingFilter.class
 com\epam\gym\trainer_hours_service\domain\exception\ErrorMessage.class
 com\epam\gym\trainer_hours_service\config\WorkloadMapConverter$1.class
+com\epam\gym\trainer_hours_service\api\dto\response\TrainerWorkloadResponse$MonthlySummary.class
 com\epam\gym\trainer_hours_service\config\SwaggerConfig.class
 com\epam\gym\trainer_hours_service\security\JwtTokenProvider.class
 META-INF\MANIFEST.MF
@@ -14,6 +15,7 @@ com\epam\gym\trainer_hours_service\TrainerHoursServiceApplication.class
 com\epam\gym\trainer_hours_service\api\controller\TrainerWorkloadController.class
 com\epam\gym\trainer_hours_service\config\JwtConfig.class
 com\epam\gym\trainer_hours_service\domain\service\ITrainerWorkloadService.class
+com\epam\gym\trainer_hours_service\api\dto\response\TrainerWorkloadResponse$YearlySummary.class
 com\epam\gym\trainer_hours_service\domain\exception\BaseException.class
 com\epam\gym\trainer_hours_service\domain\service\impl\TrainerWorkloadServiceImpl.class
 META-INF\maven\com.epam.gym\trainer-hours-service\pom.xml

@@ -68,7 +68,7 @@ class TrainerWorkloadIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.trainerUsername").value("Ahmet.Hoca"))
                 .andExpect(jsonPath("$.trainerFirstName").value("Ahmet"))
-                .andExpect(jsonPath("$.yearlySummary").isNotEmpty());
+                .andExpect(jsonPath("$.yearlySummaries").isNotEmpty());
     }
 
     @Test

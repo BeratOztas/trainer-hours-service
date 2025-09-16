@@ -57,7 +57,7 @@ class TrainerWorkloadServiceImplTest {
         existingWorkload.setTrainerUsername("john.doe");
         existingWorkload.setTrainerFirstName("John");
         existingWorkload.setTrainerLastName("Doe");
-        existingWorkload.setIsActive(true);
+        existingWorkload.setActive(true);
 
         Map<Integer, Map<Integer, Integer>> yearlySummary = new HashMap<>();
         Map<Integer, Integer> monthlySummary = new HashMap<>();
@@ -87,7 +87,7 @@ class TrainerWorkloadServiceImplTest {
         existingWorkload.setTrainerUsername("john.doe");
         existingWorkload.setTrainerFirstName("John");
         existingWorkload.setTrainerLastName("Doe");
-        existingWorkload.setIsActive(true);
+        existingWorkload.setActive(true);
 
         Map<Integer, Map<Integer, Integer>> yearlySummary = new HashMap<>();
         Map<Integer, Integer> monthlySummary = new HashMap<>();
@@ -117,7 +117,10 @@ class TrainerWorkloadServiceImplTest {
         existingWorkload.setTrainerUsername("john.doe");
         existingWorkload.setTrainerFirstName("John");
         existingWorkload.setTrainerLastName("Doe");
-        existingWorkload.setIsActive(true);
+        existingWorkload.setActive(true);
+
+        existingWorkload.setYearlySummary(new HashMap<>());
+
         when(trainerWorkloadRepository.findByTrainerUsername("john.doe")).thenReturn(Optional.of(existingWorkload));
 
         // Act

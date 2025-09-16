@@ -11,8 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -81,16 +80,22 @@ public class TrainerWorkloadControllerTest {
     @Test
     @DisplayName("GET /api/v1/trainer-workload/{trainerUsername} - Success")
     void getTrainerWorkload_success() throws Exception {
-        // Arrange: yearlySummary map
-        Map<Integer, Map<Integer, Integer>> yearlySummary = new HashMap<>();
-        yearlySummary.put(2025, Map.of(8, 60));
+        
+        List<TrainerWorkloadResponse.MonthlySummary> monthlySummaries = List.of(
+                new TrainerWorkloadResponse.MonthlySummary(8, 60)
+        );
+
+        List<TrainerWorkloadResponse.YearlySummary> yearlySummaries = List.of(
+                new TrainerWorkloadResponse.YearlySummary(2025, monthlySummaries)
+        );
+
 
         TrainerWorkloadResponse response = new TrainerWorkloadResponse(
                 "Ahmet.Hoca",
                 "Ahmet",
                 "Hoca",
                 true,
-                yearlySummary
+                yearlySummaries
         );
 
         when(trainerWorkloadService.getTrainerWorkload("Ahmet.Hoca"))
@@ -104,7 +109,9 @@ public class TrainerWorkloadControllerTest {
                 .andExpect(jsonPath("$.trainerFirstName").value("Ahmet"))
                 .andExpect(jsonPath("$.trainerLastName").value("Hoca"))
                 .andExpect(jsonPath("$.isActive").value(true))
-                .andExpect(jsonPath("$.yearlySummary.2025.8").value(60));
+                .andExpect(jsonPath("$.yearlySummaries[0].year").value(2025))
+                .andExpect(jsonPath("$.yearlySummaries[0].monthlySummary[0].month").value(8))
+                .andExpect(jsonPath("$.yearlySummaries[0].monthlySummary[0].totalTrainingMinutes").value(60));
 
         verify(trainerWorkloadService).getTrainerWorkload("Ahmet.Hoca");
     }
