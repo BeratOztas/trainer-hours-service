@@ -31,10 +31,9 @@ public class TrainerWorkload {
 	private String trainerFirstName;
 	private String trainerLastName;
 
-	private Boolean isActive;
+	private boolean isActive;
 	
 	@Convert(converter = WorkloadMapConverter.class)
 	private Map<Integer, Map<Integer, Integer>> yearlySummary;
 	
-
 }
