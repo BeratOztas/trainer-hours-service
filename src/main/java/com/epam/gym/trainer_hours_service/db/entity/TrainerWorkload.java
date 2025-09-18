@@ -36,4 +36,14 @@ public class TrainerWorkload {
 	@Convert(converter = WorkloadMapConverter.class)
 	private Map<Integer, Map<Integer, Integer>> yearlySummary;
 	
+	
+	public long getTotalTrainingMinutes() {
+        if (yearlySummary == null) {
+            return 0;
+        }
+        return yearlySummary.values().stream()
+                .flatMap(monthlyMap -> monthlyMap.values().stream())
+                .mapToLong(Integer::longValue)
+                .sum();
+    }
 }

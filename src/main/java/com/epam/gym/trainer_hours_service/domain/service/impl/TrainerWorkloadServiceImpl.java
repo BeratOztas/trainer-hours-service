@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.epam.gym.trainer_hours_service.api.dto.request.TrainerWorkloadRequest;
 import com.epam.gym.trainer_hours_service.api.dto.response.TrainerWorkloadResponse;
 import com.epam.gym.trainer_hours_service.db.entity.TrainerWorkload;
 import com.epam.gym.trainer_hours_service.db.repository.TrainerWorkloadRepository;
@@ -16,7 +15,8 @@ import com.epam.gym.trainer_hours_service.domain.exception.BaseException;
 import com.epam.gym.trainer_hours_service.domain.exception.ErrorMessage;
 import com.epam.gym.trainer_hours_service.domain.exception.MessageType;
 import com.epam.gym.trainer_hours_service.domain.service.ITrainerWorkloadService;
-import com.epam.gym.trainer_hours_service.utils.ActionType;
+import com.epam.trainingcommons.dto.TrainerWorkloadRequest;
+import com.epam.trainingcommons.utils.ActionType;
 
 
 @Service
@@ -53,7 +53,7 @@ public class TrainerWorkloadServiceImpl  implements ITrainerWorkloadService {
 		
 		int year = request.trainingDate().getYear();
 		int month =request.trainingDate().getMonthValue();
-		int duration = request.trainingDuration();
+		long duration = request.trainingDuration();
 		
 		Map<Integer, Integer> monthlySummary = yearlySummary.getOrDefault(year, new HashMap<>());
 		int currentDuration =monthlySummary.getOrDefault(month, 0);

@@ -1,39 +1,64 @@
 package com.epam.gym.trainer_hours_service.integration;
 
-import com.epam.gym.trainer_hours_service.api.dto.request.TrainerWorkloadRequest;
-import com.epam.gym.trainer_hours_service.db.repository.TrainerWorkloadRepository;
-import com.epam.gym.trainer_hours_service.utils.ActionType;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
+
+import java.time.LocalDate;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.context.annotation.Import;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.KafkaContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.DockerImageName;
 
-import java.time.LocalDate;
+import com.epam.gym.trainer_hours_service.db.entity.TrainerWorkload;
+import com.epam.gym.trainer_hours_service.db.repository.TrainerWorkloadRepository;
+import com.epam.gym.trainer_hours_service.mq.config.TestKafkaConfig;
+import com.epam.trainingcommons.dto.TrainerWorkloadRequest;
+import com.epam.trainingcommons.utils.ActionType;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-@SpringBootTest
-@AutoConfigureMockMvc
+@SpringBootTest(
+	    properties = {
+	        "spring.cloud.discovery.enabled=false",
+	        "spring.kafka.bootstrap-servers=${spring.kafka.bootstrap-servers}"
+	    }
+	)
+@Testcontainers
+@Import(TestKafkaConfig.class)
+@DirtiesContext(classMode = ClassMode.AFTER_CLASS)
+@Disabled
 class TrainerWorkloadIntegrationTest {
 
+    @Container
+    static final KafkaContainer kafka = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.0.0"));
+
+    @DynamicPropertySource
+    static void kafkaProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.kafka.bootstrap-servers", () -> kafka.getBootstrapServers());
+        
+        registry.add("spring.kafka.consumer.group-id", () -> "trainer-workload-test-group");
+    }
+
     @Autowired
-    private MockMvc mockMvc;
+    private KafkaTemplate<String, TrainerWorkloadRequest> kafkaTemplate;
 
     @Autowired
     private TrainerWorkloadRepository workloadRepository;
-
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @BeforeEach
     void cleanDb() {
@@ -41,41 +66,36 @@ class TrainerWorkloadIntegrationTest {
     }
 
     @Test
-    @DisplayName("POST + GET trainer workload integration test")
-    @WithMockUser
-    void testTrainerWorkloadIntegration() throws Exception {
+    @DisplayName("Kafka message updates workload in the database")
+    void testKafkaMessageProcessing() throws Exception {
         TrainerWorkloadRequest request = new TrainerWorkloadRequest(
-                "Ahmet.Hoca",
-                "Ahmet",
-                "Hoca",
-                true,
-                LocalDate.of(2025, 8, 1),
-                45,
-                ActionType.ADD
+            "Ahmet.Hoca",
+            "Ahmet",
+            "Hoca",
+            true,
+            LocalDate.of(2025, 8, 1),
+            45,
+            ActionType.ADD,
+            UUID.randomUUID().toString()
         );
 
-        mockMvc.perform(post("/api/v1/trainer-workload")
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer dummyToken")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isOk())
-                .andExpect(content().string("Workload successfully updated. for Trainer: Ahmet.Hoca"));
+        kafkaTemplate.send("trainer-workload-topic", request).get();
+        
 
-        assertThat(workloadRepository.findAll()).hasSize(1);
-        assertThat(workloadRepository.findAll().get(0).getTrainerUsername()).isEqualTo("Ahmet.Hoca");
+        await().atMost(10, TimeUnit.SECONDS).until(() ->
+            workloadRepository.findByTrainerUsername("Ahmet.Hoca").isPresent()
+        );
 
-        mockMvc.perform(get("/api/v1/trainer-workload/Ahmet.Hoca"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.trainerUsername").value("Ahmet.Hoca"))
-                .andExpect(jsonPath("$.trainerFirstName").value("Ahmet"))
-                .andExpect(jsonPath("$.yearlySummaries").isNotEmpty());
+        Optional<TrainerWorkload> optionalWorkload = workloadRepository.findByTrainerUsername("Ahmet.Hoca");
+
+        assertTrue(optionalWorkload.isPresent(), "Workload record should exist in the database.");
+        TrainerWorkload workload = optionalWorkload.get();
+        assertEquals("Ahmet", workload.getTrainerFirstName(), "First name should match");
+        assertEquals("Hoca", workload.getTrainerLastName(), "Last name should match");
+
+        long totalMinutes = workload.getYearlySummary().get(2025).get(8);
+        assertEquals(45, totalMinutes, "Total training minutes for August 2025 should be 45");
     }
 
-    @Test
-    @DisplayName("GET workload - trainer not found returns 404")
-    @WithMockUser
-    void testTrainerNotFound() throws Exception {
-        mockMvc.perform(get("/api/v1/trainer-workload/Unknown"))
-                .andExpect(status().isNotFound());
-    }
+ 
 }

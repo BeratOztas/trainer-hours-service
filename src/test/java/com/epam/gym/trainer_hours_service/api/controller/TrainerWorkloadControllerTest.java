@@ -12,6 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,12 +25,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.epam.gym.trainer_hours_service.api.dto.request.TrainerWorkloadRequest;
 import com.epam.gym.trainer_hours_service.api.dto.response.TrainerWorkloadResponse;
 import com.epam.gym.trainer_hours_service.domain.service.ITrainerWorkloadService;
 import com.epam.gym.trainer_hours_service.security.JwtTokenExtractor;
 import com.epam.gym.trainer_hours_service.security.JwtTokenProvider;
-import com.epam.gym.trainer_hours_service.utils.ActionType;
+import com.epam.trainingcommons.dto.TrainerWorkloadRequest;
+import com.epam.trainingcommons.utils.ActionType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @WebMvcTest(
@@ -63,7 +64,7 @@ public class TrainerWorkloadControllerTest {
                 true,
                 LocalDate.of(2025, 8, 1),
                 60,
-               ActionType.ADD
+               ActionType.ADD,UUID.randomUUID().toString()
         );
 
         // Mock service call

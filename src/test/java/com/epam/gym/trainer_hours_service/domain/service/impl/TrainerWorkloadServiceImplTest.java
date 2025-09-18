@@ -1,11 +1,11 @@
 package com.epam.gym.trainer_hours_service.domain.service.impl;
 
-import com.epam.gym.trainer_hours_service.api.dto.request.TrainerWorkloadRequest;
 import com.epam.gym.trainer_hours_service.api.dto.response.TrainerWorkloadResponse;
 import com.epam.gym.trainer_hours_service.db.entity.TrainerWorkload;
 import com.epam.gym.trainer_hours_service.db.repository.TrainerWorkloadRepository;
 import com.epam.gym.trainer_hours_service.domain.exception.BaseException;
-import com.epam.gym.trainer_hours_service.utils.ActionType;
+import com.epam.trainingcommons.dto.TrainerWorkloadRequest;
+import com.epam.trainingcommons.utils.ActionType;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,6 +18,7 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -38,7 +39,7 @@ class TrainerWorkloadServiceImplTest {
     void updateTrainerWorkload_createNewRecord() {
         // Arrange
         TrainerWorkloadRequest request = new TrainerWorkloadRequest(
-                "john.doe", "John", "Doe", true, LocalDate.of(2025, 1, 15), 60, ActionType.ADD
+                "john.doe", "John", "Doe", true, LocalDate.of(2025, 1, 15), 60, ActionType.ADD,UUID.randomUUID().toString()
         );
         when(trainerWorkloadRepository.findByTrainerUsername("john.doe")).thenReturn(Optional.empty());
 
@@ -66,7 +67,7 @@ class TrainerWorkloadServiceImplTest {
         existingWorkload.setYearlySummary(yearlySummary);
 
         TrainerWorkloadRequest request = new TrainerWorkloadRequest(
-                "john.doe", "John", "Doe", true, LocalDate.of(2025, 1, 20), 45, ActionType.ADD
+                "john.doe", "John", "Doe", true, LocalDate.of(2025, 1, 20), 45, ActionType.ADD,UUID.randomUUID().toString()
         );
 
         when(trainerWorkloadRepository.findByTrainerUsername("john.doe")).thenReturn(Optional.of(existingWorkload));
@@ -96,7 +97,7 @@ class TrainerWorkloadServiceImplTest {
         existingWorkload.setYearlySummary(yearlySummary);
 
         TrainerWorkloadRequest request = new TrainerWorkloadRequest(
-                "john.doe", "John", "Doe", true, LocalDate.of(2025, 1, 25), 40, ActionType.DELETE
+                "john.doe", "John", "Doe", true, LocalDate.of(2025, 1, 25), 40, ActionType.DELETE,UUID.randomUUID().toString()
         );
 
         when(trainerWorkloadRepository.findByTrainerUsername("john.doe")).thenReturn(Optional.of(existingWorkload));

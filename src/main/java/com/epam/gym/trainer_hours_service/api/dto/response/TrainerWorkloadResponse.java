@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import com.epam.gym.trainer_hours_service.db.entity.TrainerWorkload;
 
+
 public record TrainerWorkloadResponse(
 		String trainerUsername,
 		String trainerFirstName,

@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.epam.gym.trainer_hours_service.api.dto.request.TrainerWorkloadRequest;
 import com.epam.gym.trainer_hours_service.api.dto.response.TrainerWorkloadResponse;
 import com.epam.gym.trainer_hours_service.domain.service.ITrainerWorkloadService;
+import com.epam.trainingcommons.dto.TrainerWorkloadRequest;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

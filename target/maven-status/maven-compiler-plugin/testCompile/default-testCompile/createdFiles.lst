@@ -5,3 +5,4 @@ com\epam\gym\trainer_hours_service\security\JwtTokenExtractorTest.class
 com\epam\gym\trainer_hours_service\integration\TrainerWorkloadIntegrationTest.class
 com\epam\gym\trainer_hours_service\security\JwtAuthenticationFilterTest.class
 com\epam\gym\trainer_hours_service\security\JwtTokenProviderTest.class
+com\epam\gym\trainer_hours_service\mq\config\TestKafkaConfig.class
