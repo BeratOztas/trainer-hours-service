@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.epam.gym.trainer_hours_service.security.JwtTokenProviderTest
 -------------------------------------------------------------------------------
-Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.130 s -- in com.epam.gym.trainer_hours_service.security.JwtTokenProviderTest
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.136 s -- in com.epam.gym.trainer_hours_service.security.JwtTokenProviderTest
