@@ -1,49 +1,56 @@
 package com.epam.gym.trainer_hours_service.db.entity;
 
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.epam.gym.trainer_hours_service.config.WorkloadMapConverter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import jakarta.persistence.Convert;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity
-@Table(name = "trainer_workload")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Document("trainer_workload")
+@CompoundIndex(name = "full_name_index",def = " {'trainerFirstName':1 , 'trainerLastName':1} " )
+@Builder
 public class TrainerWorkload {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private String id;
 
 	private String trainerUsername;
 	private String trainerFirstName;
 	private String trainerLastName;
 
-	private boolean isActive;
+	private Boolean isActive;
 	
-	@Convert(converter = WorkloadMapConverter.class)
-	private Map<Integer, Map<Integer, Integer>> yearlySummary;
+	@Builder.Default
+	private List<YearlySummary> yearlySummary = new ArrayList<>();
 	
+	@Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class YearlySummary {
+        private int year;
+        @Builder.Default
+        private List<MonthlySummary> monthlySummary = new ArrayList<>();
+    }
 	
-	public long getTotalTrainingMinutes() {
-        if (yearlySummary == null) {
-            return 0;
-        }
-        return yearlySummary.values().stream()
-                .flatMap(monthlyMap -> monthlyMap.values().stream())
-                .mapToLong(Integer::longValue)
-                .sum();
+	@Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class MonthlySummary {
+        private int month;
+        private int totalTrainingMinutes;
     }
 }
