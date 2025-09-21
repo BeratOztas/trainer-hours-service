@@ -1,15 +1,16 @@
 package com.epam.gym.trainer_hours_service.domain.service.impl;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Optional;
 
+import org.jboss.logging.MDC;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.epam.gym.trainer_hours_service.api.dto.response.TrainerWorkloadResponse;
 import com.epam.gym.trainer_hours_service.db.entity.TrainerWorkload;
+import com.epam.gym.trainer_hours_service.db.entity.TrainerWorkload.MonthlySummary;
+import com.epam.gym.trainer_hours_service.db.entity.TrainerWorkload.YearlySummary;
 import com.epam.gym.trainer_hours_service.db.repository.TrainerWorkloadRepository;
 import com.epam.gym.trainer_hours_service.domain.exception.BaseException;
 import com.epam.gym.trainer_hours_service.domain.exception.ErrorMessage;
@@ -31,48 +32,84 @@ public class TrainerWorkloadServiceImpl  implements ITrainerWorkloadService {
 	}
 
 	@Override
-	@Transactional
 	public void updateTrainerWorkload(TrainerWorkloadRequest request) {
+		MDC.put("transactionID", request.transactionId());
 		logger.info("Starting workload update for trainer: {}", request.trainerUsername());
 		
-		TrainerWorkload trainerWorkload = trainerWorkloadRepository.findByTrainerUsername(request.trainerUsername())
-		.orElse(new TrainerWorkload());
-				
+		Optional<TrainerWorkload> existingTrainerWorkload =trainerWorkloadRepository.findByTrainerUsername(request.trainerUsername());
 		
-		trainerWorkload.setTrainerUsername(request.trainerUsername());
-		trainerWorkload.setTrainerFirstName(request.trainerFirstName());
-		trainerWorkload.setTrainerLastName(request.trainerLastName());
-		trainerWorkload.setActive(request.isActive());
+		TrainerWorkload trainerWorkload;
 		
-		
-		Map<Integer, Map<Integer, Integer>> yearlySummary = trainerWorkload.getYearlySummary();
-		if(yearlySummary ==null) {
-			yearlySummary=new HashMap<>();
-			trainerWorkload.setYearlySummary(yearlySummary);
+		if(existingTrainerWorkload.isPresent()) {
+			trainerWorkload=existingTrainerWorkload.get();
+			logger.debug("Existing TrainerWorkload found for user: {}", request.trainerUsername());
+		}
+		else {
+			trainerWorkload =TrainerWorkload.builder()
+					.trainerUsername(request.trainerUsername())
+					.trainerFirstName(request.trainerFirstName())
+					.trainerLastName(request.trainerLastName())
+					.isActive(request.isActive())
+					.build();
+			logger.info("New TrainerWorkload document created for user: {}", request.trainerUsername());
 		}
 		
+		// Extract year and month from the trainingDate.
 		int year = request.trainingDate().getYear();
 		int month =request.trainingDate().getMonthValue();
-		long duration = request.trainingDuration();
+		int duration = (int) request.trainingDuration();
 		
-		Map<Integer, Integer> monthlySummary = yearlySummary.getOrDefault(year, new HashMap<>());
-		int currentDuration =monthlySummary.getOrDefault(month, 0);
+		Optional<YearlySummary> existingYearlySummary =trainerWorkload.getYearlySummary().stream()
+				.filter(ys ->ys.getYear() ==year)
+				.findFirst();
 		
-		if (request.actionType() == ActionType.ADD) {
-            currentDuration += duration;
-        } else if (request.actionType() == ActionType.DELETE) {
-            currentDuration -= duration;
-        }
+		// Find or create the YearlySummary
+		YearlySummary yearlySummary;
+		if(existingYearlySummary.isPresent()) {
+			yearlySummary=existingYearlySummary.get();
+			logger.info("Existing YearlySummary found for year: {}", year);
+		}
+		else {
+			yearlySummary=YearlySummary.builder().year(year).build();
+			
+			trainerWorkload.getYearlySummary().add(yearlySummary); 
+			
+			logger.info("New YearlySummary created for year: {}", year);
+		}
 		
-		monthlySummary.put(month, currentDuration);
-        yearlySummary.put(year, monthlySummary);
+		// Find or create the MonthlySummary
+		Optional<MonthlySummary> existingMontlySummary =yearlySummary.getMonthlySummary().stream()
+				.filter(ms ->ms.getMonth()==month)
+				.findFirst();
+		
+		MonthlySummary monthlySummary;
+		if(existingMontlySummary.isPresent()) {
+			monthlySummary=existingMontlySummary.get();
+			logger.info("Existing MonthlySummary found for month: {}", month);
+		}else {
+			monthlySummary=MonthlySummary.builder().month(month).totalTrainingMinutes(0).build();
+			yearlySummary.getMonthlySummary().add(monthlySummary);
+			logger.info("New MonthlySummary created for month: {}", month);
+		}
+		
+		// Update total training Minutes based on ActionType
+		int currentDuration =monthlySummary.getTotalTrainingMinutes();
+		if(request.actionType() == ActionType.ADD) {
+			monthlySummary.setTotalTrainingMinutes(currentDuration + duration);
+			logger.info("Training minutes incremented. Old: {} -> New: {}", currentDuration, monthlySummary.getTotalTrainingMinutes());
+		}
+		else if(request.actionType()==ActionType.DELETE) {
+			monthlySummary.setTotalTrainingMinutes(currentDuration -duration);
+			logger.info("Training minutes decremented. Old: {} -> New: {}", currentDuration, monthlySummary.getTotalTrainingMinutes());
+		}
 		
         trainerWorkloadRepository.save(trainerWorkload);
+        
         logger.info("Workload successfully updated for trainer: {}", request.trainerUsername());
+        MDC.clear();
 	}
 
 	@Override
-	@Transactional(readOnly = true)
 	public TrainerWorkloadResponse getTrainerWorkload(String trainerUsername) {
 		logger.info("Retrieving workload for trainer: {}", trainerUsername);
 		
