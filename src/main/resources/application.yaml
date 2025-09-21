@@ -1,25 +1,10 @@
 spring:
   application:
     name: trainer-hours-service
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
-
-  datasource:
-    url: jdbc:h2:mem:trainerdb
-    driverClassName: org.h2.Driver
-    username: berat
-    password: 
-
-  jpa:
-    hibernate:
-      ddl-auto: create
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/trainerdb
+      auto-index-creation: true 
   kafka:
     consumer:
       bootstrap-servers: localhost:9092
@@ -48,7 +33,6 @@ eureka:
       defaultZone: http://localhost:8761/eureka/
     fetch-registry: true
     register-with-eureka: true
-
 topic:
   trainer-workload: trainer-workload-topic
   trainer-workload-dlq: trainer-workload-dlq-topic

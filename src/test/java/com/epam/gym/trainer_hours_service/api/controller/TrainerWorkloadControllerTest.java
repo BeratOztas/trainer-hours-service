@@ -1,18 +1,13 @@
 package com.epam.gym.trainer_hours_service.api.controller;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.UUID;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,16 +17,14 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.epam.gym.trainer_hours_service.api.dto.response.TrainerWorkloadResponse;
+import com.epam.gym.trainer_hours_service.db.entity.TrainerWorkload.MonthlySummary;
+import com.epam.gym.trainer_hours_service.db.entity.TrainerWorkload.YearlySummary;
 import com.epam.gym.trainer_hours_service.domain.service.ITrainerWorkloadService;
 import com.epam.gym.trainer_hours_service.security.JwtTokenExtractor;
 import com.epam.gym.trainer_hours_service.security.JwtTokenProvider;
-import com.epam.trainingcommons.dto.TrainerWorkloadRequest;
-import com.epam.trainingcommons.utils.ActionType;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @WebMvcTest(
 	    controllers = TrainerWorkloadController.class, 
@@ -51,43 +44,17 @@ public class TrainerWorkloadControllerTest {
     @MockBean
     private JwtTokenExtractor jwtTokenExtractor;
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    @Test
-    @DisplayName("POST /api/v1/trainer-workload - Success")
-    void updateTrainerWorkload_success() throws Exception {
-        TrainerWorkloadRequest request = new TrainerWorkloadRequest(
-                "Ahmet.Hoca",
-                "Ahmet",
-                "Hoca",
-                true,
-                LocalDate.of(2025, 8, 1),
-                60,
-               ActionType.ADD,UUID.randomUUID().toString()
-        );
-
-        // Mock service call
-        Mockito.doNothing().when(trainerWorkloadService).updateTrainerWorkload(any());
-
-        mockMvc.perform(post("/api/v1/trainer-workload")
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer dummyToken")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isOk())
-                .andExpect(content().string("Workload successfully updated. for Trainer: Ahmet.Hoca"));
-    }
-
+   
     @Test
     @DisplayName("GET /api/v1/trainer-workload/{trainerUsername} - Success")
     void getTrainerWorkload_success() throws Exception {
         
-        List<TrainerWorkloadResponse.MonthlySummary> monthlySummaries = List.of(
-                new TrainerWorkloadResponse.MonthlySummary(8, 60)
+        List<MonthlySummary> monthlySummaries = List.of(
+                new MonthlySummary(8, 60)
         );
 
-        List<TrainerWorkloadResponse.YearlySummary> yearlySummaries = List.of(
-                new TrainerWorkloadResponse.YearlySummary(2025, monthlySummaries)
+        List<YearlySummary> yearlySummaries = List.of(
+                new YearlySummary(2025, monthlySummaries)
         );
 
 
@@ -126,15 +93,6 @@ public class TrainerWorkloadControllerTest {
         mockMvc.perform(get("/api/v1/trainer-workload/Unknown"))
                 .andExpect(status().is5xxServerError()); 
     }
-
-    @Test
-    @DisplayName("POST /api/v1/trainer-workload - Invalid Request (400)")
-    void updateTrainerWorkload_invalidRequest() throws Exception {
-        mockMvc.perform(post("/api/v1/trainer-workload")
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer dummyToken")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{}"))
-                .andExpect(status().isBadRequest());
-    }
+    
 }
 

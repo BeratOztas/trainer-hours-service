@@ -27,6 +27,8 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
 import com.epam.gym.trainer_hours_service.db.entity.TrainerWorkload;
+import com.epam.gym.trainer_hours_service.db.entity.TrainerWorkload.MonthlySummary;
+import com.epam.gym.trainer_hours_service.db.entity.TrainerWorkload.YearlySummary;
 import com.epam.gym.trainer_hours_service.db.repository.TrainerWorkloadRepository;
 import com.epam.gym.trainer_hours_service.mq.config.TestKafkaConfig;
 import com.epam.trainingcommons.dto.TrainerWorkloadRequest;
@@ -93,7 +95,19 @@ class TrainerWorkloadIntegrationTest {
         assertEquals("Ahmet", workload.getTrainerFirstName(), "First name should match");
         assertEquals("Hoca", workload.getTrainerLastName(), "Last name should match");
 
-        long totalMinutes = workload.getYearlySummary().get(2025).get(8);
+        Optional<YearlySummary> yearlySummary = workload.getYearlySummary().stream()
+                .filter(ys -> ys.getYear() == 2025)
+                .findFirst();
+
+        assertTrue(yearlySummary.isPresent(), "Yearly summary for 2025 should exist.");
+        
+        Optional<MonthlySummary> monthlySummary = yearlySummary.get().getMonthlySummary().stream()
+                .filter(ms -> ms.getMonth() == 8)
+                .findFirst();
+
+        assertTrue(monthlySummary.isPresent(), "Monthly summary for August should exist.");
+        
+        long totalMinutes = monthlySummary.get().getTotalTrainingMinutes();
         assertEquals(45, totalMinutes, "Total training minutes for August 2025 should be 45");
     }
 
