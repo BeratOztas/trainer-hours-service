@@ -1,8 +1,8 @@
-C:\Users\Berat\Documents\GitHub\gym-app\trainer-hours-service\src\test\java\com\epam\gym\trainer_hours_service\domain\service\impl\TrainerWorkloadServiceImplTest.java
-C:\Users\Berat\Documents\GitHub\gym-app\trainer-hours-service\src\test\java\com\epam\gym\trainer_hours_service\security\JwtTokenProviderTest.java
-C:\Users\Berat\Documents\GitHub\gym-app\trainer-hours-service\src\test\java\com\epam\gym\trainer_hours_service\security\JwtAuthenticationEntryPointTest.java
-C:\Users\Berat\Documents\GitHub\gym-app\trainer-hours-service\src\test\java\com\epam\gym\trainer_hours_service\integration\TrainerWorkloadIntegrationTest.java
-C:\Users\Berat\Documents\GitHub\gym-app\trainer-hours-service\src\test\java\com\epam\gym\trainer_hours_service\security\JwtAuthenticationFilterTest.java
-C:\Users\Berat\Documents\GitHub\gym-app\trainer-hours-service\src\test\java\com\epam\gym\trainer_hours_service\security\JwtTokenExtractorTest.java
-C:\Users\Berat\Documents\GitHub\gym-app\trainer-hours-service\src\test\java\com\epam\gym\trainer_hours_service\api\controller\TrainerWorkloadControllerTest.java
-C:\Users\Berat\Documents\GitHub\gym-app\trainer-hours-service\src\test\java\com\epam\gym\trainer_hours_service\mq\config\TestKafkaConfig.java
+C:\Users\Berat\Documents\GitHub\trainer-hours-service\src\test\java\com\epam\gym\trainer_hours_service\security\JwtTokenProviderTest.java
+C:\Users\Berat\Documents\GitHub\trainer-hours-service\src\test\java\com\epam\gym\trainer_hours_service\mq\config\TestKafkaConfig.java
+C:\Users\Berat\Documents\GitHub\trainer-hours-service\src\test\java\com\epam\gym\trainer_hours_service\domain\service\impl\TrainerWorkloadServiceImplTest.java
+C:\Users\Berat\Documents\GitHub\trainer-hours-service\src\test\java\com\epam\gym\trainer_hours_service\security\JwtAuthenticationFilterTest.java
+C:\Users\Berat\Documents\GitHub\trainer-hours-service\src\test\java\com\epam\gym\trainer_hours_service\api\controller\TrainerWorkloadControllerTest.java
+C:\Users\Berat\Documents\GitHub\trainer-hours-service\src\test\java\com\epam\gym\trainer_hours_service\integration\TrainerWorkloadIntegrationTest.java
+C:\Users\Berat\Documents\GitHub\trainer-hours-service\src\test\java\com\epam\gym\trainer_hours_service\security\JwtAuthenticationEntryPointTest.java
+C:\Users\Berat\Documents\GitHub\trainer-hours-service\src\test\java\com\epam\gym\trainer_hours_service\security\JwtTokenExtractorTest.java

@@ -3,11 +3,10 @@ spring:
     name: trainer-hours-service
   data:
     mongodb:
-      uri: mongodb://localhost:27017/trainerdb
+      uri: mongodb://localhost:27018/trainer-workload-db
       auto-index-creation: true 
   kafka:
     consumer:
-      bootstrap-servers: localhost:9092
       group-id: trainer-workload-group
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
@@ -17,10 +16,9 @@ spring:
         spring.json.value.default.type: "com.epam.trainingcommons.dto.TrainerWorkloadRequest"
         spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
     producer:
-      bootstrap-servers: localhost:9092
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-
+    bootstrap-servers: localhost:29092 
 app:
   jwt:
     secret: hd72J#8!pzR@X5vmA6qTL*19ePfKzLbWuYxBVcN34
@@ -33,6 +31,8 @@ eureka:
       defaultZone: http://localhost:8761/eureka/
     fetch-registry: true
     register-with-eureka: true
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}} 
 topic:
   trainer-workload: trainer-workload-topic
   trainer-workload-dlq: trainer-workload-dlq-topic
