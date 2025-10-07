@@ -4,7 +4,6 @@ C:\Users\Berat\Documents\GitHub\trainer-hours-service\src\main\java\com\epam\gym
 C:\Users\Berat\Documents\GitHub\trainer-hours-service\src\main\java\com\epam\gym\trainer_hours_service\db\repository\TrainerWorkloadRepository.java
 C:\Users\Berat\Documents\GitHub\trainer-hours-service\src\main\java\com\epam\gym\trainer_hours_service\domain\exception\BaseException.java
 C:\Users\Berat\Documents\GitHub\trainer-hours-service\src\main\java\com\epam\gym\trainer_hours_service\mq\config\KafkaDLQConfig.java
-C:\Users\Berat\Documents\GitHub\trainer-hours-service\src\main\java\com\epam\gym\trainer_hours_service\api\dto\response\TrainerWorkloadResponse.java
 C:\Users\Berat\Documents\GitHub\trainer-hours-service\src\main\java\com\epam\gym\trainer_hours_service\mq\config\KafkaProducerConfig.java
 C:\Users\Berat\Documents\GitHub\trainer-hours-service\src\main\java\com\epam\gym\trainer_hours_service\TrainerHoursServiceApplication.java
 C:\Users\Berat\Documents\GitHub\trainer-hours-service\src\main\java\com\epam\gym\trainer_hours_service\security\JwtTokenExtractor.java
@@ -16,6 +15,7 @@ C:\Users\Berat\Documents\GitHub\trainer-hours-service\src\main\java\com\epam\gym
 C:\Users\Berat\Documents\GitHub\trainer-hours-service\src\main\java\com\epam\gym\trainer_hours_service\domain\service\ITrainerWorkloadService.java
 C:\Users\Berat\Documents\GitHub\trainer-hours-service\src\main\java\com\epam\gym\trainer_hours_service\config\SwaggerConfig.java
 C:\Users\Berat\Documents\GitHub\trainer-hours-service\src\main\java\com\epam\gym\trainer_hours_service\config\JwtConfig.java
+C:\Users\Berat\Documents\GitHub\trainer-hours-service\src\main\java\com\epam\gym\trainer_hours_service\api\mapper\TrainerWorkloadMapper.java
 C:\Users\Berat\Documents\GitHub\trainer-hours-service\src\main\java\com\epam\gym\trainer_hours_service\db\entity\TrainerWorkload.java
 C:\Users\Berat\Documents\GitHub\trainer-hours-service\src\main\java\com\epam\gym\trainer_hours_service\mq\config\KafkaConsumerConfig.java
 C:\Users\Berat\Documents\GitHub\trainer-hours-service\src\main\java\com\epam\gym\trainer_hours_service\domain\exception\ErrorMessage.java

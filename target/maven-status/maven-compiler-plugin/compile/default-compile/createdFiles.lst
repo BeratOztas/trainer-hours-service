@@ -1,7 +1,6 @@
 com\epam\gym\trainer_hours_service\domain\handler\ApiError.class
 com\epam\gym\trainer_hours_service\security\JwtAuthenticationFilter.class
 com\epam\gym\trainer_hours_service\mq\config\KafkaDLQConfig.class
-com\epam\gym\trainer_hours_service\api\dto\response\TrainerWorkloadResponse.class
 com\epam\gym\trainer_hours_service\domain\handler\GlobalExceptionHandler.class
 com\epam\gym\trainer_hours_service\api\filter\RequestLoggingFilter.class
 com\epam\gym\trainer_hours_service\domain\exception\ErrorMessage.class
@@ -19,6 +18,7 @@ com\epam\gym\trainer_hours_service\config\JwtConfig.class
 com\epam\gym\trainer_hours_service\domain\service\ITrainerWorkloadService.class
 com\epam\gym\trainer_hours_service\db\entity\TrainerWorkload$TrainerWorkloadBuilder.class
 com\epam\gym\trainer_hours_service\mq\TrainingListener.class
+com\epam\gym\trainer_hours_service\api\mapper\TrainerWorkloadMapper.class
 com\epam\gym\trainer_hours_service\domain\exception\BaseException.class
 com\epam\gym\trainer_hours_service\domain\service\impl\TrainerWorkloadServiceImpl.class
 META-INF\maven\com.epam.gym\trainer-hours-service\pom.xml
