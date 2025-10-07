@@ -6,6 +6,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 import com.epam.gym.trainer_hours_service.domain.service.ITrainerWorkloadService;
+import com.epam.gym.trainer_hours_service.domain.service.impl.TrainerWorkloadServiceImpl;
 import com.epam.trainingcommons.dto.TrainerWorkloadRequest;
 
 @Component
@@ -15,7 +16,7 @@ public class TrainingListener {
 
 	private final ITrainerWorkloadService trainerWorkloadService;
 
-	public TrainingListener(ITrainerWorkloadService trainerWorkloadService) {
+	public TrainingListener(TrainerWorkloadServiceImpl trainerWorkloadService) {
 		this.trainerWorkloadService=trainerWorkloadService;
 	}
 
