@@ -35,19 +35,12 @@ public class JwtAuthenticationEntryPointTest {
     @Test
     @DisplayName("should send 401 Unauthorized error with the exception message")
     void commence_shouldSendUnauthorizedError() throws IOException, ServletException {
-        // Arrange
         String errorMessage = "Unauthorized: Full authentication is required to access this resource";
         
-        // Use Mockito.when() to define the mock's behavior.
-        // Tell the mock what to return when getMessage() is called.
         when(authException.getMessage()).thenReturn(errorMessage);
 
-        // Act
         jwtAuthenticationEntryPoint.commence(request, response, authException);
 
-        // Assert
-        // Now, you can verify that the response.sendError method
-        // was called with the correct status and the message from the mock.
         verify(response).sendError(HttpServletResponse.SC_UNAUTHORIZED, errorMessage);
     }
 }

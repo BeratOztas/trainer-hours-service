@@ -48,14 +48,12 @@ class JwtAuthenticationFilterTest {
     @Test
     @DisplayName("should set authentication for a valid JWT token")
     void doFilterInternal_withValidJwt_shouldSetAuthentication() throws ServletException, IOException {
-        // Arrange
         String validJwt = "valid.jwt.token";
         String username = "testuser";
         when(tokenExtractor.extractJwtFromRequest(request)).thenReturn(validJwt);
         when(tokenProvider.validateToken(validJwt)).thenReturn(true);
         when(tokenProvider.getUsernameFromToken(validJwt)).thenReturn(username);
 
-        // Act
         jwtAuthenticationFilter.doFilterInternal(request, response, filterChain);
 
         // Assert
@@ -64,12 +62,9 @@ class JwtAuthenticationFilterTest {
         verify(tokenProvider).validateToken(validJwt);
         verify(tokenProvider).getUsernameFromToken(validJwt);
         
-        // Assert that the SecurityContextHolder now holds a non-null authentication object.
-        // It's not necessary to check the full details, just that it was set.
         assert (SecurityContextHolder.getContext().getAuthentication() != null);
     }
     
-    // An invalid token scenario
     @Test
     @DisplayName("should not set authentication for an invalid JWT token")
     void doFilterInternal_withInvalidJwt_shouldNotSetAuthentication() throws ServletException, IOException {
@@ -91,7 +86,6 @@ class JwtAuthenticationFilterTest {
         assertNull(SecurityContextHolder.getContext().getAuthentication());
     }
 
-    // No token scenario
     @Test
     @DisplayName("should not set authentication when no JWT token is present")
     void doFilterInternal_withNoJwt_shouldNotSetAuthentication() throws ServletException, IOException {

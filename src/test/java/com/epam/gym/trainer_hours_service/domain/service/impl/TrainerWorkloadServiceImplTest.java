@@ -23,12 +23,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.MDC;
 
-import com.epam.gym.trainer_hours_service.api.dto.response.TrainerWorkloadResponse;
+import com.epam.gym.trainer_hours_service.api.mapper.TrainerWorkloadMapper;
 import com.epam.gym.trainer_hours_service.db.entity.TrainerWorkload;
 import com.epam.gym.trainer_hours_service.db.entity.TrainerWorkload.MonthlySummary;
 import com.epam.gym.trainer_hours_service.db.entity.TrainerWorkload.YearlySummary;
 import com.epam.gym.trainer_hours_service.db.repository.TrainerWorkloadRepository;
 import com.epam.trainingcommons.dto.TrainerWorkloadRequest;
+import com.epam.trainingcommons.dto.TrainerWorkloadResponse;
 import com.epam.trainingcommons.utils.ActionType;
 
 @ExtendWith(MockitoExtension.class)
@@ -43,6 +44,9 @@ class TrainerWorkloadServiceImplTest {
     private TrainerWorkload existingTrainer;
     private TrainerWorkloadRequest request;
 
+    @Mock
+    private TrainerWorkloadMapper mapper;
+    
     @BeforeEach
     void setUp() {
         // Clear MDC before each test
@@ -133,16 +137,18 @@ class TrainerWorkloadServiceImplTest {
     @DisplayName("should retrieve trainer workload successfully")
     void getTrainerWorkload_success() {
         when(trainerWorkloadRepository.findByTrainerUsername("Ahmet.Hoca"))
-                .thenReturn(Optional.of(existingTrainer));
+                .thenReturn(Optional.of(existingTrainer)); 
+
+        TrainerWorkloadResponse mockResponse = new TrainerWorkloadResponse("Ahmet.Hoca", null, null, null, null);
+        when(mapper.toDto(any(TrainerWorkload.class))).thenReturn(mockResponse);
 
         TrainerWorkloadResponse response = trainerWorkloadService.getTrainerWorkload("Ahmet.Hoca");
 
         assertNotNull(response);
         assertEquals("Ahmet.Hoca", response.trainerUsername());
-        assertEquals(2025, response.yearlySummaries().get(0).getYear());
-        assertEquals(8, response.yearlySummaries().get(0).getMonthlySummary().get(0).getMonth());
-        assertEquals(60, response.yearlySummaries().get(0).getMonthlySummary().get(0).getTotalTrainingMinutes());
+        
         verify(trainerWorkloadRepository).findByTrainerUsername("Ahmet.Hoca");
+        verify(mapper).toDto(existingTrainer);
     }
 
     @Test

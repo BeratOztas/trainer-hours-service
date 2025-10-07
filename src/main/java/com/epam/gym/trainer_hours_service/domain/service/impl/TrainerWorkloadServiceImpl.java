@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.epam.gym.trainer_hours_service.api.dto.response.TrainerWorkloadResponse;
+import com.epam.gym.trainer_hours_service.api.mapper.TrainerWorkloadMapper;
 import com.epam.gym.trainer_hours_service.db.entity.TrainerWorkload;
 import com.epam.gym.trainer_hours_service.db.entity.TrainerWorkload.MonthlySummary;
 import com.epam.gym.trainer_hours_service.db.entity.TrainerWorkload.YearlySummary;
@@ -17,6 +17,7 @@ import com.epam.gym.trainer_hours_service.domain.exception.ErrorMessage;
 import com.epam.gym.trainer_hours_service.domain.exception.MessageType;
 import com.epam.gym.trainer_hours_service.domain.service.ITrainerWorkloadService;
 import com.epam.trainingcommons.dto.TrainerWorkloadRequest;
+import com.epam.trainingcommons.dto.TrainerWorkloadResponse;
 import com.epam.trainingcommons.utils.ActionType;
 
 
@@ -27,8 +28,11 @@ public class TrainerWorkloadServiceImpl  implements ITrainerWorkloadService {
 	
 	private final TrainerWorkloadRepository trainerWorkloadRepository;
 	
-	public TrainerWorkloadServiceImpl(TrainerWorkloadRepository trainerWorkloadRepository) {
+	 private final TrainerWorkloadMapper mapper;
+	
+	public TrainerWorkloadServiceImpl(TrainerWorkloadRepository trainerWorkloadRepository,TrainerWorkloadMapper mapper) {
 		this.trainerWorkloadRepository = trainerWorkloadRepository;
+		this.mapper=mapper;
 	}
 
 	@Override
@@ -114,11 +118,16 @@ public class TrainerWorkloadServiceImpl  implements ITrainerWorkloadService {
 		logger.info("Retrieving workload for trainer: {}", trainerUsername);
 		
 		return trainerWorkloadRepository.findByTrainerUsername(trainerUsername)
-				.map(TrainerWorkloadResponse::fromEntity)
+				.map(mapper::toDto)
 				.orElseThrow(() ->{
 					 logger.warn("Trainer workload record not found for: {}", trainerUsername);
 	                    throw new BaseException(new ErrorMessage(MessageType.TRAINER_NOT_FOUND,"Trainer Username: "+ trainerUsername));
 				});
+	}
+
+	@Override
+	public void deleteAll() {
+		trainerWorkloadRepository.deleteAll();
 	}
 
 }

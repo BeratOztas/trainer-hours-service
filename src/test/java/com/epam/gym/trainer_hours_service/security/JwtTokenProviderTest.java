@@ -34,12 +34,8 @@ class JwtTokenProviderTest {
 
     @BeforeEach
     void setUp() {
-        // Set up the mock JwtConfig to return a known secret key
         when(jwtConfig.getSecret()).thenReturn(SECRET_KEY);
 
-        // Manually set the key in the JwtTokenProvider instance using reflection.
-        // This is necessary because getKey() is a private method.
-        // In a real application, you might make it package-private for easier testing.
         testKey = Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
         ReflectionTestUtils.setField(jwtTokenProvider, "jwtConfig", jwtConfig);
     }
@@ -94,44 +90,33 @@ class JwtTokenProviderTest {
     @Test
     @DisplayName("should return false for an expired token")
     void validateToken_withExpiredToken_shouldReturnFalse() throws InterruptedException {
-        // Arrange
-        // Create a token that expires in 1 millisecond
         String expiredToken = generateTestToken("testuser", 1);
         
-        // Wait for the token to expire
         Thread.sleep(10); 
 
-        // Act
         boolean isValid = jwtTokenProvider.validateToken(expiredToken);
 
-        // Assert
         assertFalse(isValid);
     }
 
     @Test
     @DisplayName("should return false for a malformed token")
     void validateToken_withMalformedToken_shouldReturnFalse() {
-        // Arrange
         String malformedToken = "invalid-token-format";
 
-        // Act
         boolean isValid = jwtTokenProvider.validateToken(malformedToken);
 
-        // Assert
         assertFalse(isValid);
     }
 
     @Test
     @DisplayName("should extract username from a valid token")
     void getUsernameFromToken_withValidToken_shouldReturnUsername() {
-        // Arrange
         String username = "testuser";
         String validToken = generateTestToken(username, 3600000); // 1 hour expiration
 
-        // Act
         String extractedUsername = jwtTokenProvider.getUsernameFromToken(validToken);
 
-        // Assert
         assertEquals(username, extractedUsername);
     }
 }

@@ -3,18 +3,21 @@ package com.epam.gym.trainer_hours_service.api.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.epam.gym.trainer_hours_service.api.dto.response.TrainerWorkloadResponse;
 import com.epam.gym.trainer_hours_service.domain.service.ITrainerWorkloadService;
+import com.epam.gym.trainer_hours_service.domain.service.impl.TrainerWorkloadServiceImpl;
 import com.epam.trainingcommons.dto.TrainerWorkloadRequest;
+import com.epam.trainingcommons.dto.TrainerWorkloadResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -30,31 +33,40 @@ public class TrainerWorkloadController {
 
 	private final ITrainerWorkloadService trainerWorkloadService;
 
-	public TrainerWorkloadController(ITrainerWorkloadService trainerWorkloadService) {
+	public TrainerWorkloadController(TrainerWorkloadServiceImpl trainerWorkloadService) {
 		this.trainerWorkloadService = trainerWorkloadService;
 	}
 	
 
+	
 	@PostMapping
 	@Operation(summary = "Update trainer workload", description = "Handles ADD or DELETE training events to update a trainer's workload.")
 	@ApiResponse(responseCode = "200", description = "Workload successfully updated.")
 	@ApiResponse(responseCode = "400", description = "Invalid request payload.")
-	public ResponseEntity<String> updateTrainerWorkload(@Valid @RequestBody TrainerWorkloadRequest request
-			,@RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+	public ResponseEntity<String> updateTrainerWorkload(@Valid @RequestBody TrainerWorkloadRequest request,
+			@RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
 
 		logger.info("Received request to update trainer workload. Trainer: {}", request.trainerUsername());
 		trainerWorkloadService.updateTrainerWorkload(request);
 		return ResponseEntity.ok("Workload successfully updated. for Trainer: " + request.trainerUsername());
 
 	}
-	
+
 	@GetMapping("/{trainerUsername}")
 	@Operation(summary = "Get trainer workload", description = "Retrieves the total training duration for a specific trainer by their username.")
 	@ApiResponse(responseCode = "200", description = "Workload found.")
 	@ApiResponse(responseCode = "404", description = "Trainer not found.")
-	public ResponseEntity<TrainerWorkloadResponse> getTrainerWorkload(@PathVariable String trainerUsername){
+	public ResponseEntity<TrainerWorkloadResponse> getTrainerWorkload(@PathVariable String trainerUsername) {
 		logger.info("Retrieving workload for trainer: {}", trainerUsername);
 		return ResponseEntity.ok(trainerWorkloadService.getTrainerWorkload(trainerUsername));
+	}
+	
+	@DeleteMapping("/clean-db")
+	@Profile("local") 
+	public ResponseEntity<String> cleanDatabaseForTests() {
+	    logger.warn("!!! TEST-ONLY ENDPOINT: Cleaning entire TrainerWorkload database !!!");
+	    trainerWorkloadService.deleteAll();
+	    return ResponseEntity.ok("Test database cleaned.");
 	}
 
 }
