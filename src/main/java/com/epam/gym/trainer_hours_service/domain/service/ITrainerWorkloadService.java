@@ -9,5 +9,4 @@ public interface ITrainerWorkloadService {
 
 	TrainerWorkloadResponse getTrainerWorkload(String trainerUsername);
 	
-	void deleteAll();
 }

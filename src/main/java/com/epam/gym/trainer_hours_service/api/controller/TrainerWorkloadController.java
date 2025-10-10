@@ -2,16 +2,14 @@ package com.epam.gym.trainer_hours_service.api.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.context.annotation.Profile;
-import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.epam.gym.trainer_hours_service.domain.service.ITrainerWorkloadService;
@@ -37,8 +35,6 @@ public class TrainerWorkloadController {
 		this.trainerWorkloadService = trainerWorkloadService;
 	}
 	
-
-	
 	@PostMapping
 	@Operation(summary = "Update trainer workload", description = "Handles ADD or DELETE training events to update a trainer's workload.")
 	@ApiResponse(responseCode = "200", description = "Workload successfully updated.")
@@ -61,12 +57,4 @@ public class TrainerWorkloadController {
 		return ResponseEntity.ok(trainerWorkloadService.getTrainerWorkload(trainerUsername));
 	}
 	
-	@DeleteMapping("/clean-db")
-	@Profile("local") 
-	public ResponseEntity<String> cleanDatabaseForTests() {
-	    logger.warn("!!! TEST-ONLY ENDPOINT: Cleaning entire TrainerWorkload database !!!");
-	    trainerWorkloadService.deleteAll();
-	    return ResponseEntity.ok("Test database cleaned.");
-	}
-
 }

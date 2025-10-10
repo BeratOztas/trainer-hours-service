@@ -125,9 +125,4 @@ public class TrainerWorkloadServiceImpl  implements ITrainerWorkloadService {
 				});
 	}
 
-	@Override
-	public void deleteAll() {
-		trainerWorkloadRepository.deleteAll();
-	}
-
 }
