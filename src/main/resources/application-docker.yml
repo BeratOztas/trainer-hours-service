@@ -1,0 +1,14 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://root:password@mongodb:27017/trainer-workload-db?authSource=admin
+  kafka:
+    consumer:
+      bootstrap-servers: kafka-broker:9092
+    
+server:
+  port: 8081
+    
+eureka:
+  client:
+    enabled: false
