@@ -8,6 +8,7 @@ public class TrainerHoursServiceApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(TrainerHoursServiceApplication.class, args);
+		System.out.println("Trainer-Hours Running...");
 	}
 
 }

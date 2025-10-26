@@ -32,9 +32,6 @@ public class SecurityConfig {
 				.authorizeHttpRequests(auth -> auth
 						// H2 Console
 						.requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
-						// Local testing only (might cause a leak, not sure — what do you think, Senior?)
-						// Probably fine since we're running on the local profile.
-						.requestMatchers("/api/v1/trainer-workload/clean-db").permitAll()
 						// Trainer workload endpoints
 						.requestMatchers("/api/v1/trainer-workload/**").authenticated()
 						// Swagger, health, vs
